@@ -1,0 +1,53 @@
+#include "../include/Bid.h"
+#include <stdexcept>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
+
+Bid::Bid(const std::string& clientId, const std::string& clientName, double amount)
+    : clientId(clientId), clientName(clientName), amount(amount) {
+    if (amount <= 0) {
+        throw std::invalid_argument("Bid amount must be positive");
+    }
+    
+    // Установка временной метки
+    auto now = std::time(nullptr);
+    auto tm = *std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
+    timestamp = oss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const Bid& bid) {
+    os << "Client: " << bid.clientName << " (ID: " << bid.clientId << ")\n"
+       << "Amount: " << std::fixed << std::setprecision(2) << bid.amount << " руб.\n"
+       << "Time: " << bid.timestamp;
+    return os;
+}
+
+bool Bid::operator==(const Bid& other) const {
+    return clientId == other.clientId && amount == other.amount;
+}
+
+bool Bid::operator<(const Bid& other) const {
+    if (amount != other.amount) {
+        return amount < other.amount;
+    }
+    return timestamp < other.timestamp;
+}
+
+std::string Bid::toString() const {
+    std::ostringstream oss;
+    oss << "Client: " << clientName << " (ID: " << clientId << "), "
+        << "Amount: " << std::fixed << std::setprecision(2) << amount << " руб., "
+        << "Time: " << timestamp;
+    return oss.str();
+}
+
+std::string Bid::toFileString() const {
+    std::ostringstream oss;
+    oss << clientId << "|" << clientName << "|" << std::fixed << std::setprecision(2) 
+        << amount << "|" << timestamp;
+    return oss.str();
+}
+
