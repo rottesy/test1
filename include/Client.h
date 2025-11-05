@@ -41,4 +41,4 @@ public:
 
 std::ostream &operator<<(std::ostream &os, const Client &client);
 
-#endif // CLIENT_H
+#endif // CLIENT_
