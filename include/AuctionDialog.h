@@ -27,7 +27,6 @@ public:
   QString getPropertyId() const;
   double getStartingPrice() const;
 
-  // Для работы со ставками
   void refreshBids();
   void updateAuctionInfo();
 
@@ -56,7 +55,6 @@ private:
   QLabel *currentHighestBidLabel;
   QLabel *statusLabel;
 
-  // Ставки
   QTableWidget *bidsTable;
   QPushButton *addBidBtn;
   QPushButton *completeAuctionBtn;

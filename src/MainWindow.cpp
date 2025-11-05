@@ -2439,7 +2439,7 @@ bool MainWindow::validateTransaction(const std::string &propertyId,
     if (hasActive) {
       QMessageBox::warning(this, "Ошибка валидации",
                            "Недвижимость уже используется в другой активной "
-                           "сделке (pending или completed)!");
+                           "сделке (ожидание или завершена)!");
       return false;
     }
   }

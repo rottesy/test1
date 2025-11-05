@@ -19,7 +19,6 @@ Client::Client(const std::string& id, const std::string& name,
         throw std::invalid_argument("Invalid email format");
     }
     
-    // Установка даты регистрации
     auto now = std::time(nullptr);
     auto tm = *std::localtime(&now);
     std::ostringstream oss;
@@ -66,7 +65,6 @@ void Client::setEmail(const std::string& email) {
 }
 
 bool Client::validateId(const std::string& id) {
-    // ID должен содержать только цифры и быть длиной от 6 до 8 символов
     if (id.empty() || id.length() < 6 || id.length() > 8) {
         return false;
     }
@@ -79,7 +77,6 @@ bool Client::validateId(const std::string& id) {
 }
 
 bool Client::validatePhone(const std::string& phone) {
-    // Белорусский формат: +375XXXXXXXXX (9 цифр после +375)
     std::regex pattern(R"(\+375\d{9})");
     return std::regex_match(phone, pattern);
 }

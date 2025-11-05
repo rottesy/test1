@@ -3,7 +3,7 @@
 
 #include "Property.h"
 
-// Класс квартиры (наследование от Property)
+
 class Apartment : public Property {
 private:
     int rooms;
@@ -17,19 +17,17 @@ public:
               double price, double area, const std::string& description,
               int rooms, int floor, bool hasBalcony, bool hasElevator);
     
-    // Переопределение виртуальных функций
+    
     std::string getType() const override;
     void displayInfo() const override;
     std::string toFileString() const override;
     Property* clone() const override;
 
-    // Специфичные геттеры
     int getRooms() const { return rooms; }
     int getFloor() const { return floor; }
     bool getHasBalcony() const { return hasBalcony; }
     bool getHasElevator() const { return hasElevator; }
 
-    // Сеттеры с валидацией
     void setRooms(int rooms);
     void setFloor(int floor);
 };

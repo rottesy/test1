@@ -7,7 +7,6 @@
 #include <memory>
 #include <vector>
 
-// Исключение для менеджера аукционов
 class AuctionManagerException : public std::exception {
 private:
   std::string message;
@@ -17,7 +16,6 @@ public:
   const char *what() const noexcept override { return message.c_str(); }
 };
 
-// Менеджер аукционов
 class AuctionManager {
 private:
   std::vector<std::shared_ptr<Auction>> auctions;

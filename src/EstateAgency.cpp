@@ -4,7 +4,6 @@
 EstateAgency* EstateAgency::instance = nullptr;
 
 EstateAgency::EstateAgency() : dataDirectory("data") {
-    // Создаем директорию для данных, если она не существует
     std::filesystem::create_directories(dataDirectory);
 }
 
@@ -33,7 +32,7 @@ void EstateAgency::saveAllData() const {
         transactionManager.saveToFile(dataDirectory + "/transactions.txt");
         auctionManager.saveToFile(dataDirectory + "/auctions.txt");
     } catch (const std::exception& e) {
-        // Логирование ошибок сохранения
+        
     }
 }
 
@@ -44,7 +43,6 @@ void EstateAgency::loadAllData() {
         transactionManager.loadFromFile(dataDirectory + "/transactions.txt");
         auctionManager.loadFromFile(dataDirectory + "/auctions.txt");
     } catch (const std::exception& e) {
-        // Логирование ошибок загрузки
     }
 }
 

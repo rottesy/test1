@@ -10,7 +10,6 @@ Bid::Bid(const std::string& clientId, const std::string& clientName, double amou
         throw std::invalid_argument("Bid amount must be positive");
     }
     
-    // Установка временной метки
     auto now = std::time(nullptr);
     auto tm = *std::localtime(&now);
     std::ostringstream oss;

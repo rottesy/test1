@@ -13,10 +13,8 @@ Auction::Auction(const std::string& id, const std::string& propertyId,
         throw std::invalid_argument("Starting price must be positive");
     }
     
-    // Вычисляем цену автоматической покупки (+70% от начальной цены)
     buyoutPrice = startingPrice * 1.7;
     
-    // Установка даты создания
     auto now = std::time(nullptr);
     auto tm = *std::localtime(&now);
     std::ostringstream oss;
@@ -46,22 +44,21 @@ bool Auction::operator<(const Auction& other) const {
 
 bool Auction::addBid(std::shared_ptr<Bid> bid) {
     if (status != "active") {
-        return false; // Аукцион не активен
+        return false; 
     }
     
     double currentHighest = getCurrentHighestBid();
     
-    // Проверка на автоматическую покупку
+  
     if (bid->getAmount() >= buyoutPrice) {
         bids.push_back(bid);
-        complete(); // Автоматически завершаем аукцион
+        complete(); 
         return true;
     }
     
-    // Проверка минимального шага (минимум на 0.01 больше)
     double minBid = (currentHighest > 0) ? currentHighest + 0.01 : startingPrice;
     if (bid->getAmount() < minBid) {
-        return false; // Ставка слишком низкая
+        return false; 
     }
     
     bids.push_back(bid);

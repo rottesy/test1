@@ -10,7 +10,6 @@
 #include <memory>
 #include <vector>
 
-// Исключение для менеджера недвижимости
 class PropertyManagerException : public std::exception {
 private:
   std::string message;
@@ -20,7 +19,6 @@ public:
   const char *what() const noexcept override { return message.c_str(); }
 };
 
-// Шаблонный класс менеджера (демонстрация шаблонов)
 template <typename T> class ContainerManager {
 protected:
   std::vector<std::shared_ptr<T>> items;
@@ -55,7 +53,6 @@ public:
   }
 };
 
-// Менеджер недвижимости (использует шаблоны через наследование концепции)
 class PropertyManager {
 private:
   std::vector<std::unique_ptr<Property>> properties;
@@ -64,7 +61,6 @@ private:
 public:
   PropertyManager();
 
-  // Добавление недвижимости
   void addProperty(std::unique_ptr<Property> property);
   void addApartment(const std::string &id, const std::string &city,
                     const std::string &street, const std::string &house,
@@ -82,11 +78,9 @@ public:
                              const std::string &businessType, bool hasParking,
                              int parkingSpaces, bool isVisibleFromStreet);
 
-  // Удаление и поиск
   bool removeProperty(const std::string &id);
   Property *findProperty(const std::string &id) const;
 
-  // Получение списка (демонстрация итераторов)
   std::vector<Property *> getAllProperties() const;
   std::vector<Property *> getAvailableProperties() const;
   std::vector<Property *> searchByPriceRange(double minPrice,
@@ -95,7 +89,6 @@ public:
                                           const std::string &street = "",
                                           const std::string &house = "") const;
 
-  // Работа с файлами
   void saveToFile(const std::string &filename) const;
   void loadFromFile(const std::string &filename);
 

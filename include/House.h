@@ -3,7 +3,6 @@
 
 #include "Property.h"
 
-// Класс дома (наследование от Property)
 class House : public Property {
 private:
     int floors;
@@ -18,20 +17,17 @@ public:
           double price, double area, const std::string& description,
           int floors, int rooms, double landArea, bool hasGarage, bool hasGarden);
     
-    // Переопределение виртуальных функций
     std::string getType() const override;
     void displayInfo() const override;
     std::string toFileString() const override;
     Property* clone() const override;
 
-    // Специфичные геттеры
     int getFloors() const { return floors; }
     int getRooms() const { return rooms; }
     double getLandArea() const { return landArea; }
     bool getHasGarage() const { return hasGarage; }
     bool getHasGarden() const { return hasGarden; }
 
-    // Сеттеры с валидацией
     void setFloors(int floors);
     void setRooms(int rooms);
     void setLandArea(double landArea);

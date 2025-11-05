@@ -4,21 +4,19 @@
 #include <string>
 
 namespace Constants {
-// Статусы транзакций
 namespace TransactionStatus {
 constexpr const char *PENDING = "pending";
 constexpr const char *COMPLETED = "completed";
 constexpr const char *CANCELLED = "cancelled";
-} // namespace TransactionStatus
+} 
 
-// Статусы аукционов
 namespace AuctionStatus {
 constexpr const char *ACTIVE = "active";
 constexpr const char *COMPLETED = "completed";
 constexpr const char *CANCELLED = "cancelled";
-} // namespace AuctionStatus
+} 
 
-// Сообщения для пользователя
+
 namespace Messages {
 constexpr const char *NOT_FOUND = "Ничего не найдено";
 constexpr const char *FOUND = "Найдено";
@@ -31,9 +29,9 @@ constexpr const char *ERROR = "Ошибка";
 constexpr const char *INFORMATION = "Информация";
 constexpr const char *CONFIRMATION = "Подтверждение";
 constexpr const char *VALIDATION_ERROR = "Ошибка валидации";
-} // namespace Messages
+} 
 
-// Сообщения об ошибках
+
 namespace ErrorMessages {
 constexpr const char *SYSTEM_NOT_INITIALIZED = "Система не инициализирована";
 constexpr const char *UNKNOWN_ERROR = "Неизвестная ошибка";
@@ -42,9 +40,9 @@ constexpr const char *LOAD_ERROR = "Ошибка загрузки";
 constexpr const char *ADD_ERROR = "Ошибка добавления";
 constexpr const char *EDIT_ERROR = "Ошибка редактирования";
 constexpr const char *DELETE_ERROR = "Ошибка удаления";
-} // namespace ErrorMessages
+} 
 
-// Сообщения для операций
+
 namespace OperationMessages {
 constexpr const char *PROPERTY_ADDED = "Недвижимость добавлена";
 constexpr const char *PROPERTY_UPDATED = "Недвижимость обновлена";
@@ -57,9 +55,9 @@ constexpr const char *TRANSACTION_UPDATED = "Сделка обновлена";
 constexpr const char *TRANSACTION_DELETED = "Сделка удалена";
 constexpr const char *AUCTION_CREATED = "Аукцион создан";
 constexpr const char *AUCTION_DELETED = "Аукцион удален";
-} // namespace OperationMessages
+} 
 
-// Сообщения для выбора
+
 namespace SelectionMessages {
 constexpr const char *SELECT_PROPERTY_TO_EDIT =
     "Выберите недвижимость для редактирования";
@@ -75,17 +73,17 @@ constexpr const char *SELECT_TRANSACTION_TO_DELETE =
 constexpr const char *SELECT_AUCTION_TO_VIEW = "Выберите аукцион для просмотра";
 constexpr const char *SELECT_AUCTION_TO_DELETE =
     "Выберите аукцион для удаления";
-} // namespace SelectionMessages
+} 
 
-// Сообщения для подтверждения
+
 namespace ConfirmationMessages {
 constexpr const char *DELETE_PROPERTY = "Удалить недвижимость?";
 constexpr const char *DELETE_CLIENT = "Удалить клиента?";
 constexpr const char *DELETE_TRANSACTION = "Удалить сделку?";
 constexpr const char *DELETE_AUCTION = "Удалить аукцион?";
-} // namespace ConfirmationMessages
+} 
 
-// Сообщения для информационных диалогов
+
 namespace InfoMessages {
 constexpr const char *NO_PROPERTIES_FOR_AUCTION =
     "Нет доступной недвижимости для создания аукциона";
@@ -99,9 +97,9 @@ constexpr const char *INSUFFICIENT_DATA_FOR_TRANSACTION =
 constexpr const char *INSUFFICIENT_DATA_FOR_EDIT =
     "Недостаточно данных для редактирования сделки";
 constexpr const char *ENTER_TRANSACTION_ID = "Введите ID сделки (6-8 цифр)";
-} // namespace InfoMessages
+} 
 
-// Статусы для отображения
+
 namespace DisplayStatus {
 constexpr const char *PENDING = "В ожидании";
 constexpr const char *COMPLETED = "Завершена";
@@ -109,14 +107,14 @@ constexpr const char *CANCELLED = "Отменена";
 constexpr const char *ACTIVE = "Активен";
 constexpr const char *AUCTION_COMPLETED = "Завершен";
 constexpr const char *AUCTION_CANCELLED = "Отменен";
-} // namespace DisplayStatus
+} 
 
-// Время показа сообщений (в миллисекундах)
+
 namespace MessageTimeout {
 constexpr int SHORT = 2000;
 constexpr int MEDIUM = 3000;
 constexpr int LONG = 5000;
-} // namespace MessageTimeout
-} // namespace Constants
+} 
+} 
 
 #endif // CONSTANTS_H

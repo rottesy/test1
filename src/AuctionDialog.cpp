@@ -101,7 +101,6 @@ AuctionDialog::AuctionDialog(QWidget *parent, Auction *editAuction,
 
   propertyCombo->addItems(propertyIds);
 
-  // Заполняем список клиентов (только если clientCombo был создан)
   if (clientCombo) {
     auto clients = agency->getClientManager().getAllClients();
     QStringList clientIds;
@@ -128,7 +127,6 @@ AuctionDialog::~AuctionDialog() {}
 void AuctionDialog::setupUI() {
   QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
-  // Форма для создания/просмотра аукциона
   QGroupBox *auctionGroup =
       new QGroupBox(isViewMode ? "Информация об аукционе" : "Создать аукцион");
   QFormLayout *formLayout = new QFormLayout(auctionGroup);
@@ -184,7 +182,6 @@ void AuctionDialog::setupUI() {
 
   mainLayout->addWidget(auctionGroup);
 
-  // Раздел для ставок (только в режиме просмотра)
   if (isViewMode) {
     QGroupBox *bidsGroup = new QGroupBox("Ставки");
     QVBoxLayout *bidsLayout = new QVBoxLayout(bidsGroup);
@@ -203,7 +200,6 @@ void AuctionDialog::setupUI() {
     bidsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     bidsLayout->addWidget(bidsTable);
 
-    // Форма для добавления ставки
     QGroupBox *addBidGroup = new QGroupBox("Добавить ставку");
     QFormLayout *bidFormLayout = new QFormLayout(addBidGroup);
 
@@ -269,7 +265,6 @@ void AuctionDialog::loadAuctionData(Auction *auction) {
 
   idEdit->setText(QString::fromStdString(auction->getId()));
 
-  // Ищем индекс по ID, сравнивая начало строки "ID - "
   QString propertyId = QString::fromStdString(auction->getPropertyId());
   int propIndex = -1;
   for (int i = 0; i < propertyIds.size(); ++i) {
@@ -314,11 +309,9 @@ void AuctionDialog::updatePropertyInfo() {
     propertyPriceLabel->setText(priceText);
 
     if (!isViewMode) {
-      // Обновляем начальную цену аукциона на цену недвижимости
       priceSpin->setValue(propertyPrice);
     }
 
-    // Обновляем цену автоматической покупки
     double startingPrice = priceSpin->value();
     double buyoutPrice = startingPrice * 1.7;
     QString buyoutText = QString("Цена автоматической покупки: %1 руб. (+70%%)")
@@ -326,7 +319,6 @@ void AuctionDialog::updatePropertyInfo() {
     buyoutPriceLabel->setText(buyoutText);
   }
 
-  // Обновляем цену автоматической покупки при изменении начальной цены
   connect(priceSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
           [this](double value) {
             double buyoutPrice = value * 1.7;
@@ -361,7 +353,7 @@ void AuctionDialog::refreshBids() {
   }
 
   bidsTable->sortItems(2,
-                       Qt::DescendingOrder); // Сортировка по ставке (убывание)
+                       Qt::DescendingOrder); 
   refreshAuctionInfo();
 }
 
@@ -383,7 +375,6 @@ void AuctionDialog::addBid() {
   QString clientStr = clientCombo->currentText();
   QString clientId = clientStr.split(" - ").first();
 
-  // Находим клиента для получения имени
   Client *client =
       agency->getClientManager().findClient(clientId.toStdString());
   if (!client) {
@@ -393,11 +384,9 @@ void AuctionDialog::addBid() {
 
   double bidAmount = bidAmountSpin->value();
 
-  // Создаем ставку
   auto bid = std::make_shared<Bid>(clientId.toStdString(), client->getName(),
                                    bidAmount);
 
-  // Добавляем ставку в аукцион
   if (!currentAuction->addBid(bid)) {
     double currentHighest = currentAuction->getCurrentHighestBid();
     double minBid = (currentHighest > 0) ? currentHighest + 0.01
@@ -417,9 +406,7 @@ void AuctionDialog::addBid() {
     return;
   }
 
-  // Проверяем, не была ли автоматическая покупка
   if (bidAmount >= currentAuction->getBuyoutPrice()) {
-    // Аукцион уже завершен в addBid(), создаем сделку
     createTransactionFromAuction();
 
     QMessageBox::information(this, "Аукцион завершен",
@@ -431,12 +418,10 @@ void AuctionDialog::addBid() {
   refreshBids();
   refreshAuctionInfo();
 
-  // Обновляем минимальную ставку
   double newMinBid = currentAuction->getCurrentHighestBid() + 0.01;
   bidAmountSpin->setMinimum(newMinBid);
   bidAmountSpin->setValue(newMinBid);
 
-  // Если аукцион завершен, отключаем кнопки
   if (!currentAuction->isActive()) {
     addBidBtn->setEnabled(false);
     bidAmountSpin->setEnabled(false);
@@ -456,7 +441,6 @@ void AuctionDialog::completeAuction() {
     return;
   }
 
-  // Проверяем, есть ли ставки
   Bid *winner = currentAuction->getHighestBid();
   if (!winner) {
     int ret = QMessageBox::question(
@@ -464,7 +448,7 @@ void AuctionDialog::completeAuction() {
         "На аукционе нет ставок. Завершить аукцион без сделки?",
         QMessageBox::Yes | QMessageBox::No);
     if (ret == QMessageBox::Yes) {
-      currentAuction->cancel(); // Отменяем, если нет ставок
+      currentAuction->cancel(); 
       refreshAuctionInfo();
       addBidBtn->setEnabled(false);
       bidAmountSpin->setEnabled(false);
@@ -482,7 +466,6 @@ void AuctionDialog::completeAuction() {
   if (ret == QMessageBox::Yes) {
     currentAuction->complete();
 
-    // Создаем сделку с победителем
     createTransactionFromAuction();
 
     refreshAuctionInfo();
@@ -533,7 +516,6 @@ void AuctionDialog::refreshAuctionInfo() {
           "Текущая максимальная ставка: нет ставок");
     }
 
-    // Обновляем минимальную ставку
     double minBid = (highestBid > 0) ? highestBid + 0.01
                                      : currentAuction->getStartingPrice();
     bidAmountSpin->setMinimum(minBid);
@@ -542,7 +524,6 @@ void AuctionDialog::refreshAuctionInfo() {
     }
   }
 
-  // Обновляем цену автоматической покупки
   double buyoutPrice = currentAuction->getBuyoutPrice();
   QString buyoutText = QString("Цена автоматической покупки: %1 руб. (+70%%)")
                            .arg(QString::number(buyoutPrice, 'f', 2));
@@ -594,13 +575,12 @@ void AuctionDialog::createTransactionFromAuction() {
   if (!currentAuction || !agency)
     return;
 
-  // Получаем победителя аукциона
   Bid *winner = currentAuction->getHighestBid();
   if (!winner) {
-    return; // Нет победителя, сделка не создается
+    return; 
   }
 
-  // Проверяем, не создана ли уже сделка для этого аукциона
+  
   auto existingTransactions =
       agency->getTransactionManager().getTransactionsByProperty(
           currentAuction->getPropertyId());
@@ -608,29 +588,25 @@ void AuctionDialog::createTransactionFromAuction() {
     if (trans->getClientId() == winner->getClientId() &&
         trans->getStatus() == "completed" &&
         trans->getFinalPrice() == winner->getAmount()) {
-      // Сделка уже существует
+      
       return;
     }
   }
 
-  // Генерируем ID для транзакции (6-8 цифр, как требуется для Transaction)
-  // Используем текущее время для уникальности
+  
   std::string transactionId;
   {
     auto now = std::time(nullptr);
     auto tm = *std::localtime(&now);
     std::ostringstream oss;
-    // Формат: HHMMSS = 6 цифр
     oss << std::put_time(&tm, "%H%M%S");
     transactionId = oss.str();
 
-    // Если нужно больше цифр, добавляем день месяца
     if (transactionId.length() < 8) {
       transactionId +=
-          std::to_string(tm.tm_mday % 100); // Добавляем 2 цифры дня = 8 цифр
+          std::to_string(tm.tm_mday % 100); 
     }
 
-    // Обеспечиваем, что ID состоит только из цифр и имеет длину 6-8
     if (transactionId.length() > 8) {
       transactionId = transactionId.substr(0, 8);
     }
@@ -640,25 +616,20 @@ void AuctionDialog::createTransactionFromAuction() {
     }
   }
 
-  // Проверяем уникальность ID, если не уникален - добавляем суффикс
   int suffix = 1;
   std::string originalId = transactionId;
   while (agency->getTransactionManager().findTransaction(transactionId) !=
          nullptr) {
-    // Добавляем суффикс, сохраняя длину 6-8 цифр
     if (transactionId.length() < 8) {
       transactionId = originalId + std::to_string(suffix % 10);
       if (transactionId.length() > 8)
         transactionId = transactionId.substr(0, 8);
     } else {
-      // Если уже 8 цифр, заменяем последние 2 цифры
       transactionId = originalId.substr(0, 6) + std::to_string(suffix % 100);
     }
     suffix++;
     if (suffix > 999) {
-      // Fallback: используем ID аукциона как основу (должен быть валидным)
       std::string baseId = currentAuction->getId();
-      // Убеждаемся, что baseId состоит только из цифр
       std::string cleanId;
       for (char c : baseId) {
         if (std::isdigit(static_cast<unsigned char>(c)))
@@ -669,7 +640,6 @@ void AuctionDialog::createTransactionFromAuction() {
       } else {
         transactionId = cleanId + std::string(6 - cleanId.length(), '0');
       }
-      // Добавляем случайное число для уникальности
       auto now = std::time(nullptr);
       transactionId += std::to_string((now % 100));
       if (transactionId.length() > 8)
@@ -679,7 +649,6 @@ void AuctionDialog::createTransactionFromAuction() {
   }
 
   try {
-    // Создаем транзакцию
     double finalPrice = winner->getAmount();
     std::string notes =
         "Продажа через аукцион. Аукцион ID: " + currentAuction->getId();
@@ -687,13 +656,11 @@ void AuctionDialog::createTransactionFromAuction() {
     auto transaction = std::make_shared<Transaction>(
         transactionId, currentAuction->getPropertyId(), winner->getClientId(),
         finalPrice,
-        "completed", // Статус "завершена"
+        "completed", 
         notes);
 
-    // Добавляем транзакцию
     agency->getTransactionManager().addTransaction(transaction);
 
-    // Помечаем недвижимость как недоступную
     Property *prop = agency->getPropertyManager().findProperty(
         currentAuction->getPropertyId());
     if (prop) {

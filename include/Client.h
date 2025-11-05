@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 
-// Класс клиента
 class Client {
 private:
   std::string id;
@@ -18,26 +17,21 @@ public:
   Client(const std::string &id, const std::string &name,
          const std::string &phone, const std::string &email);
 
-  // Дружественная функция для вывода
   friend std::ostream &operator<<(std::ostream &os, const Client &client);
 
-  // Перегрузка операций
   bool operator==(const Client &other) const;
   bool operator<(const Client &other) const;
 
-  // Геттеры
   std::string getId() const { return id; }
   std::string getName() const { return name; }
   std::string getPhone() const { return phone; }
   std::string getEmail() const { return email; }
   std::string getRegistrationDate() const { return registrationDate; }
 
-  // Сеттеры с валидацией
   void setName(const std::string &name);
   void setPhone(const std::string &phone);
   void setEmail(const std::string &email);
 
-  // Валидация
   static bool validateId(const std::string &id);
   static bool validatePhone(const std::string &phone);
   static bool validateEmail(const std::string &email);

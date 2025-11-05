@@ -109,33 +109,31 @@ void AuctionManager::loadFromFile(const std::string& filename) {
         if (line.empty()) continue;
         
         if (line.length() >= 4 && line.substr(0, 4) == "BID|") {
-            // Загрузка ставки
             if (currentAuction == nullptr) continue;
             
             try {
-                std::istringstream iss(line.substr(4)); // Пропускаем "BID|"
+                std::istringstream iss(line.substr(4)); 
                 std::string auctionId, clientId, clientName, amountStr, timestamp;
                 
                 if (!std::getline(iss, auctionId, '|') || auctionId.empty()) continue;
                 if (!std::getline(iss, clientId, '|') || clientId.empty()) continue;
-                if (!std::getline(iss, clientName, '|')) continue; // clientName может быть пустым
+                if (!std::getline(iss, clientName, '|')) continue; 
                 if (!std::getline(iss, amountStr, '|') || amountStr.empty()) continue;
-                std::getline(iss, timestamp, '|'); // timestamp опционален
+                std::getline(iss, timestamp, '|'); 
                 
                 double amount = std::stod(amountStr);
-                if (amount <= 0) continue; // Валидация суммы
+                if (amount <= 0) continue; 
                 
                 auto bid = std::make_shared<Bid>(clientId, clientName, amount);
-                // При загрузке игнорируем проверки минимального шага и статуса
+                
                 if (currentAuction) {
                     currentAuction->addBidDirect(bid);
                 }
             } catch (const std::exception& e) {
-                // Игнорируем ошибки парсинга отдельных ставок
+                
                 continue;
             }
         } else {
-            // Загрузка аукциона
             std::istringstream iss(line);
             std::string id, propertyId, propertyAddress, startingPriceStr, buyoutPriceStr, 
                         status, createdAt, completedAt;
@@ -152,7 +150,7 @@ void AuctionManager::loadFromFile(const std::string& filename) {
             try {
                 double startingPrice = std::stod(startingPriceStr);
                 auto auction = std::make_shared<Auction>(id, propertyId, propertyAddress, startingPrice);
-                // Восстанавливаем статус и даты
+                
                 if (status == "completed") {
                     auction->complete();
                 } else if (status == "cancelled") {

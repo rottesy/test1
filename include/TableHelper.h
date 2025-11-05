@@ -6,21 +6,18 @@
 #include <QTableWidgetItem>
 
 namespace TableHelper {
-// Безопасное получение выбранной строки
 inline int getSelectedRow(QTableWidget *table) {
   if (!table)
     return -1;
   return table->currentRow();
 }
 
-// Проверка валидности выбранной строки
 inline bool isValidRow(QTableWidget *table, int row) {
   if (!table)
     return false;
   return row >= 0 && row < table->rowCount();
 }
 
-// Безопасное получение ID из выбранной строки
 inline QString getSelectedId(QTableWidget *table, int column = 0) {
   if (!table)
     return QString();
@@ -34,14 +31,12 @@ inline QString getSelectedId(QTableWidget *table, int column = 0) {
   return item ? item->text() : QString();
 }
 
-// Очистка таблицы
 inline void clearTable(QTableWidget *table) {
   if (table) {
     table->setRowCount(0);
   }
 }
 
-// Установка текста статуса
 inline QString getTransactionStatusText(const std::string &status) {
   if (status == "pending")
     return "В ожидании";
@@ -50,7 +45,6 @@ inline QString getTransactionStatusText(const std::string &status) {
   return "Отменена";
 }
 
-// Установка текста статуса аукциона
 inline QString getAuctionStatusText(const std::string &status) {
   if (status == "active")
     return "Активен";
@@ -59,7 +53,6 @@ inline QString getAuctionStatusText(const std::string &status) {
   return "Отменен";
 }
 
-// Получение русского названия типа недвижимости
 inline QString getPropertyTypeText(const std::string &type) {
   if (type == "Apartment")
     return "Квартира";
@@ -70,7 +63,6 @@ inline QString getPropertyTypeText(const std::string &type) {
   return QString::fromStdString(type);
 }
 
-// Проверка наличия валидного выбора
 inline bool hasValidSelection(QTableWidget *table) {
   return isValidRow(table, getSelectedRow(table));
 }

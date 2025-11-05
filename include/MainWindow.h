@@ -41,7 +41,6 @@ public:
   ~MainWindow();
 
 private slots:
-  // Недвижимость
   void addProperty();
   void editProperty();
   void deleteProperty();
@@ -49,21 +48,18 @@ private slots:
   void searchProperties();
   void propertySelectionChanged();
 
-  // Клиенты
   void addClient();
   void editClient();
   void deleteClient();
   void refreshClients();
   void searchClients();
 
-  // Сделки
   void addTransaction();
   void editTransaction();
   void deleteTransaction();
   void refreshTransactions();
   void searchTransactions();
 
-  // Аукционы
   void addAuction();
   void viewAuction();
   void deleteAuction();
@@ -71,7 +67,6 @@ private slots:
   void searchAuctions();
   void auctionSelectionChanged();
 
-  // Файлы
   void saveAllData();
   void loadAllData();
 
@@ -83,7 +78,6 @@ private:
   void setupTransactionsTab();
   void setupAuctionsTab();
 
-  // Новый интерфейс
   void setupNewUI();
   void setupDashboard();
   void setupPropertiesPage();
@@ -92,7 +86,7 @@ private:
   void setupAuctionsPage();
   void updateDashboardStats();
   void onNavigationChanged(int index);
-  void applyStyles(); // Применение стилей
+  void applyStyles(); 
 
   void updatePropertiesTable();
   void updateClientsTable();
@@ -104,18 +98,15 @@ private:
   void showTransactionDetails(Transaction *trans);
   void showAuctionDetails(Auction *auction);
 
-  // Взаимосвязи
   void showPropertyTransactions(const std::string &propertyId);
   void showClientTransactions(const std::string &clientId);
   void highlightRelatedItems();
 
-  // Валидация
   bool validateTransaction(const std::string &propertyId,
                            const std::string &clientId,
                            const std::string &status,
                            const std::string &excludeTransactionId = "");
 
-  // Вспомогательные функции
   void showStatusMessage(const QString &message, int timeout = 3000);
   QString getSelectedIdFromTable(QTableWidget *table);
   bool checkTableSelection(QTableWidget *table, const QString &errorMessage);
@@ -124,7 +115,6 @@ private:
 
   EstateAgency *agency;
 
-  // Недвижимость
   QTableWidget *propertiesTable;
   QPushButton *addPropertyBtn;
   QPushButton *editPropertyBtn;
@@ -134,7 +124,6 @@ private:
   QLineEdit *searchPropertyEdit;
   QTextEdit *propertyDetailsText;
 
-  // Клиенты
   QTableWidget *clientsTable;
   QPushButton *addClientBtn;
   QPushButton *editClientBtn;
@@ -144,7 +133,6 @@ private:
   QLineEdit *searchClientEdit;
   QTextEdit *clientDetailsText;
 
-  // Сделки
   QTableWidget *transactionsTable;
   QPushButton *addTransactionBtn;
   QPushButton *editTransactionBtn;
@@ -154,7 +142,6 @@ private:
   QLineEdit *searchTransactionEdit;
   QTextEdit *transactionDetailsText;
 
-  // Аукционы
   QTableWidget *auctionsTable;
   QPushButton *addAuctionBtn;
   QPushButton *viewAuctionBtn;
@@ -164,18 +151,15 @@ private:
   QLineEdit *searchAuctionEdit;
   QTextEdit *auctionDetailsText;
 
-  // Новый интерфейс - навигация
   QListWidget *navigationList;
   QStackedWidget *contentStack;
 
-  // Виджеты для нового интерфейса
   QWidget *dashboardWidget;
   QWidget *propertiesPageWidget;
   QWidget *clientsPageWidget;
   QWidget *transactionsPageWidget;
   QWidget *auctionsPageWidget;
 
-  // Статистика для dashboard
   QLabel *statsPropertiesLabel;
   QLabel *statsClientsLabel;
   QLabel *statsTransactionsLabel;

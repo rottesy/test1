@@ -24,7 +24,6 @@ public:
 
   PropertyType getPropertyType() const;
 
-  // Общие данные
   QString getId() const;
   QString getCity() const;
   QString getStreet() const;
@@ -34,19 +33,16 @@ public:
   QString getDescription() const;
   bool getIsAvailable() const;
 
-  // Квартира
   int getRooms() const;
   int getFloor() const;
   bool getHasBalcony() const;
   bool getHasElevator() const;
 
-  // Дом
   int getFloors() const;
   double getLandArea() const;
   bool getHasGarage() const;
   bool getHasGarden() const;
 
-  // Коммерческая
   QString getBusinessType() const;
   int getParkingSpaces() const;
   bool getIsVisibleFromStreet() const;
@@ -71,14 +67,12 @@ private:
   QTextEdit *descriptionEdit;
   QCheckBox *availableCheck;
 
-  // Квартира
   QGroupBox *apartmentGroup;
   QSpinBox *roomsSpin;
   QSpinBox *floorSpin;
   QCheckBox *balconyCheck;
   QCheckBox *elevatorCheck;
 
-  // Дом
   QGroupBox *houseGroup;
   QSpinBox *floorsSpin;
   QSpinBox *houseRoomsSpin;
@@ -86,7 +80,6 @@ private:
   QCheckBox *garageCheck;
   QCheckBox *gardenCheck;
 
-  // Коммерческая
   QGroupBox *commercialGroup;
   QLineEdit *businessTypeEdit;
   QCheckBox *parkingCheck;
