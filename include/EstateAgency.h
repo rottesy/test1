@@ -16,22 +16,26 @@ private:
   AuctionManager auctionManager;
   std::string dataDirectory;
 
-  EstateAgency(); 
+  EstateAgency();
 
 public:
   ~EstateAgency();
 
-  
+  // Singleton methods
   static EstateAgency *getInstance();
   static void destroyInstance();
 
+  // Manager accessors
   PropertyManager &getPropertyManager() { return propertyManager; }
   ClientManager &getClientManager() { return clientManager; }
   TransactionManager &getTransactionManager() { return transactionManager; }
   AuctionManager &getAuctionManager() { return auctionManager; }
 
+  // Data operations
   void saveAllData() const;
   void loadAllData();
+
+  // Configuration
   void setDataDirectory(const std::string &dir) { dataDirectory = dir; }
   std::string getDataDirectory() const { return dataDirectory; }
 };

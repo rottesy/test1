@@ -16,7 +16,7 @@ private:
   double startingPrice;
   double buyoutPrice;
   std::vector<std::shared_ptr<Bid>> bids;
-  std::string status; 
+  std::string status;
   std::string createdAt;
   std::string completedAt;
 
@@ -24,23 +24,26 @@ public:
   Auction(const std::string &id, const std::string &propertyId,
           const std::string &propertyAddress, double startingPrice);
 
- 
+  // Friend operators
   friend std::ostream &operator<<(std::ostream &os, const Auction &auction);
 
+  // Comparison operators
   bool operator==(const Auction &other) const;
   bool operator<(const Auction &other) const;
 
- 
+  // Bid management
   bool addBid(std::shared_ptr<Bid> bid);
-
   void addBidDirect(std::shared_ptr<Bid> bid);
 
+  // Bid queries
   double getCurrentHighestBid() const;
   Bid *getHighestBid() const;
 
+  // Status management
   void complete();
   void cancel();
 
+  // Getters
   std::string getId() const { return id; }
   std::string getPropertyId() const { return propertyId; }
   std::string getPropertyAddress() const { return propertyAddress; }
@@ -53,8 +56,8 @@ public:
   bool isActive() const { return status == "active"; }
   bool isCompleted() const { return status == "completed"; }
 
+  // Utility methods
   bool wasBuyout() const;
-
   std::string toString() const;
   std::string toFileString() const;
 };

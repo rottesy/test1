@@ -13,6 +13,7 @@
 #include <QAbstractItemView>
 #include <QDebug>
 #include <QFrame>
+#include <QHeaderView>
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
@@ -29,6 +30,8 @@
 #include <QTableWidgetItem>
 #include <QTextEdit>
 #include <QTimer>
+#include <functional>
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   agency = EstateAgency::getInstance();
@@ -745,31 +748,32 @@ void MainWindow::setupPropertiesPage() {
   headerLayout->addWidget(searchPropertyEdit);
   headerLayout->addWidget(searchPropertyBtn);
 
-  // Кнопки действий
   addPropertyBtn = new QPushButton("➕ Добавить");
-  editPropertyBtn = new QPushButton("✏️ Редактировать");
-  deletePropertyBtn = new QPushButton("🗑️ Удалить");
   refreshPropertyBtn = new QPushButton("🔄 Обновить");
   headerLayout->addWidget(addPropertyBtn);
-  headerLayout->addWidget(editPropertyBtn);
-  headerLayout->addWidget(deletePropertyBtn);
   headerLayout->addWidget(refreshPropertyBtn);
   layout->addLayout(headerLayout);
 
   // Область с таблицей и деталями
   QSplitter *splitter = new QSplitter(Qt::Horizontal);
 
-  // Таблица
   propertiesTable = new QTableWidget;
-  propertiesTable->setColumnCount(6);
+  propertiesTable->setColumnCount(7);
   propertiesTable->setHorizontalHeaderLabels(
-      {"ID", "Тип", "Адрес", "Цена", "Площадь", "Доступность"});
+      {"ID", "Тип", "Адрес", "Цена", "Площадь", "Доступность", "Действия"});
   propertiesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   propertiesTable->setSelectionMode(QAbstractItemView::SingleSelection);
-  propertiesTable->horizontalHeader()->setStretchLastSection(true);
   propertiesTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  propertiesTable->verticalHeader()->setDefaultSectionSize(60);
+  propertiesTable->setColumnWidth(0, 100);
+  propertiesTable->setColumnWidth(1, 120);
+  propertiesTable->setColumnWidth(2, 300);
+  propertiesTable->setColumnWidth(3, 150);
+  propertiesTable->setColumnWidth(4, 100);
+  propertiesTable->setColumnWidth(5, 120);
+  propertiesTable->setColumnWidth(6, 300);
+  propertiesTable->horizontalHeader()->setStretchLastSection(false);
 
-  // Детали
   QFrame *detailsFrame = new QFrame;
   detailsFrame->setFixedWidth(400);
   detailsFrame->setStyleSheet(
@@ -792,13 +796,8 @@ void MainWindow::setupPropertiesPage() {
 
   layout->addWidget(splitter);
 
-  // Подключения
   connect(addPropertyBtn, &QPushButton::clicked, this,
           &MainWindow::addProperty);
-  connect(editPropertyBtn, &QPushButton::clicked, this,
-          &MainWindow::editProperty);
-  connect(deletePropertyBtn, &QPushButton::clicked, this,
-          &MainWindow::deleteProperty);
   connect(refreshPropertyBtn, &QPushButton::clicked, this,
           &MainWindow::refreshProperties);
   connect(searchPropertyBtn, &QPushButton::clicked, this,
@@ -828,29 +827,30 @@ void MainWindow::setupClientsPage() {
   headerLayout->addWidget(searchClientEdit);
   headerLayout->addWidget(searchClientBtn);
 
-  // Кнопки
   addClientBtn = new QPushButton("➕ Добавить");
-  editClientBtn = new QPushButton("✏️ Редактировать");
-  deleteClientBtn = new QPushButton("🗑️ Удалить");
   refreshClientBtn = new QPushButton("🔄 Обновить");
   headerLayout->addWidget(addClientBtn);
-  headerLayout->addWidget(editClientBtn);
-  headerLayout->addWidget(deleteClientBtn);
   headerLayout->addWidget(refreshClientBtn);
   layout->addLayout(headerLayout);
 
-  // Таблица и детали
   QSplitter *splitter = new QSplitter(Qt::Horizontal);
 
   clientsTable = new QTableWidget;
-  clientsTable->setColumnCount(5);
+  clientsTable->setColumnCount(6);
   clientsTable->setHorizontalHeaderLabels(
-      {"ID", "Имя", "Телефон", "Email", "Дата регистрации"});
+      {"ID", "Имя", "Телефон", "Email", "Дата регистрации", "Действия"});
   clientsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   clientsTable->setSelectionMode(QAbstractItemView::SingleSelection);
-  clientsTable->horizontalHeader()->setStretchLastSection(true);
   clientsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
   clientsTable->setAlternatingRowColors(true);
+  clientsTable->verticalHeader()->setDefaultSectionSize(60);
+  clientsTable->setColumnWidth(0, 100);
+  clientsTable->setColumnWidth(1, 200);
+  clientsTable->setColumnWidth(2, 150);
+  clientsTable->setColumnWidth(3, 250);
+  clientsTable->setColumnWidth(4, 150);
+  clientsTable->setColumnWidth(5, 300);
+  clientsTable->horizontalHeader()->setStretchLastSection(false);
 
   QFrame *detailsFrame = new QFrame;
   detailsFrame->setFixedWidth(400);
@@ -874,11 +874,7 @@ void MainWindow::setupClientsPage() {
 
   layout->addWidget(splitter);
 
-  // Подключения
   connect(addClientBtn, &QPushButton::clicked, this, &MainWindow::addClient);
-  connect(editClientBtn, &QPushButton::clicked, this, &MainWindow::editClient);
-  connect(deleteClientBtn, &QPushButton::clicked, this,
-          &MainWindow::deleteClient);
   connect(refreshClientBtn, &QPushButton::clicked, this,
           &MainWindow::refreshClients);
   connect(searchClientBtn, &QPushButton::clicked, this,
@@ -917,29 +913,31 @@ void MainWindow::setupTransactionsPage() {
   headerLayout->addWidget(searchTransactionEdit);
   headerLayout->addWidget(searchTransactionBtn);
 
-  // Кнопки
   addTransactionBtn = new QPushButton("➕ Добавить");
-  editTransactionBtn = new QPushButton("✏️ Редактировать");
-  deleteTransactionBtn = new QPushButton("🗑️ Удалить");
   refreshTransactionBtn = new QPushButton("🔄 Обновить");
   headerLayout->addWidget(addTransactionBtn);
-  headerLayout->addWidget(editTransactionBtn);
-  headerLayout->addWidget(deleteTransactionBtn);
   headerLayout->addWidget(refreshTransactionBtn);
   layout->addLayout(headerLayout);
 
-  // Таблица и детали
   QSplitter *splitter = new QSplitter(Qt::Horizontal);
 
   transactionsTable = new QTableWidget;
-  transactionsTable->setColumnCount(6);
+  transactionsTable->setColumnCount(7);
   transactionsTable->setHorizontalHeaderLabels(
-      {"ID", "Недвижимость", "Клиент", "Цена", "Дата", "Статус"});
+      {"ID", "Недвижимость", "Клиент", "Цена", "Дата", "Статус", "Действия"});
   transactionsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   transactionsTable->setSelectionMode(QAbstractItemView::SingleSelection);
-  transactionsTable->horizontalHeader()->setStretchLastSection(true);
   transactionsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
   transactionsTable->setAlternatingRowColors(true);
+  transactionsTable->verticalHeader()->setDefaultSectionSize(60);
+  transactionsTable->setColumnWidth(0, 100);
+  transactionsTable->setColumnWidth(1, 250);
+  transactionsTable->setColumnWidth(2, 200);
+  transactionsTable->setColumnWidth(3, 150);
+  transactionsTable->setColumnWidth(4, 120);
+  transactionsTable->setColumnWidth(5, 120);
+  transactionsTable->setColumnWidth(6, 300);
+  transactionsTable->horizontalHeader()->setStretchLastSection(false);
 
   QFrame *detailsFrame = new QFrame;
   detailsFrame->setFixedWidth(400);
@@ -963,13 +961,8 @@ void MainWindow::setupTransactionsPage() {
 
   layout->addWidget(splitter);
 
-  // Подключения
   connect(addTransactionBtn, &QPushButton::clicked, this,
           &MainWindow::addTransaction);
-  connect(editTransactionBtn, &QPushButton::clicked, this,
-          &MainWindow::editTransaction);
-  connect(deleteTransactionBtn, &QPushButton::clicked, this,
-          &MainWindow::deleteTransaction);
   connect(refreshTransactionBtn, &QPushButton::clicked, this,
           &MainWindow::refreshTransactions);
   connect(searchTransactionBtn, &QPushButton::clicked, this,
@@ -1045,6 +1038,84 @@ void MainWindow::showStatusMessage(const QString &message, int timeout) {
   }
 }
 
+QWidget *MainWindow::createActionButtons(QTableWidget *table, const QString &id,
+                                         std::function<void()> editAction,
+                                         std::function<void()> deleteAction) {
+  QWidget *actionsWidget = new QWidget;
+  QHBoxLayout *actionsLayout = new QHBoxLayout(actionsWidget);
+  actionsLayout->setContentsMargins(5, 5, 5, 5);
+  actionsLayout->setSpacing(8);
+
+  QPushButton *editBtn = new QPushButton("Редактировать");
+  editBtn->setMinimumWidth(110);
+  editBtn->setFixedHeight(35);
+  QPushButton *deleteBtn = new QPushButton("Удалить");
+  deleteBtn->setMinimumWidth(90);
+  deleteBtn->setFixedHeight(35);
+
+  connect(editBtn, &QPushButton::clicked, this,
+          [this, table, id, editAction]() {
+            selectRowById(table, id);
+            editAction();
+          });
+  connect(deleteBtn, &QPushButton::clicked, this,
+          [this, table, id, deleteAction]() {
+            selectRowById(table, id);
+            deleteAction();
+          });
+
+  actionsLayout->addWidget(editBtn);
+  actionsLayout->addWidget(deleteBtn);
+  actionsLayout->addStretch();
+
+  return actionsWidget;
+}
+
+QWidget *MainWindow::createActionButtons(QTableWidget *table, const QString &id,
+                                         std::function<void()> viewAction,
+                                         std::function<void()> deleteAction,
+                                         bool isView) {
+  QWidget *actionsWidget = new QWidget;
+  QHBoxLayout *actionsLayout = new QHBoxLayout(actionsWidget);
+  actionsLayout->setContentsMargins(5, 5, 5, 5);
+  actionsLayout->setSpacing(8);
+
+  QPushButton *viewBtn = new QPushButton("Просмотр");
+  viewBtn->setMinimumWidth(100);
+  viewBtn->setFixedHeight(35);
+  QPushButton *deleteBtn = new QPushButton("Удалить");
+  deleteBtn->setMinimumWidth(90);
+  deleteBtn->setFixedHeight(35);
+
+  connect(viewBtn, &QPushButton::clicked, this,
+          [this, table, id, viewAction]() {
+            selectRowById(table, id);
+            viewAction();
+          });
+  connect(deleteBtn, &QPushButton::clicked, this,
+          [this, table, id, deleteAction]() {
+            selectRowById(table, id);
+            deleteAction();
+          });
+
+  actionsLayout->addWidget(viewBtn);
+  actionsLayout->addWidget(deleteBtn);
+  actionsLayout->addStretch();
+
+  return actionsWidget;
+}
+
+void MainWindow::selectRowById(QTableWidget *table, const QString &id) {
+  if (!table)
+    return;
+  for (int i = 0; i < table->rowCount(); ++i) {
+    if (table->item(i, 0) && table->item(i, 0)->text() == id) {
+      table->selectRow(i);
+      break;
+    }
+  }
+}
+
 QString MainWindow::getSelectedIdFromTable(QTableWidget *table) {
   return TableHelper::getSelectedId(table);
 }
@@ -1092,16 +1163,11 @@ void MainWindow::setupPropertiesTab() {
   QWidget *propertiesWidget = new QWidget;
   QVBoxLayout *mainLayout = new QVBoxLayout(propertiesWidget);
 
-  // Кнопки управления
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   addPropertyBtn = new QPushButton("Добавить");
-  editPropertyBtn = new QPushButton("Редактировать");
-  deletePropertyBtn = new QPushButton("Удалить");
   refreshPropertyBtn = new QPushButton("Обновить");
 
   buttonLayout->addWidget(addPropertyBtn);
-  buttonLayout->addWidget(editPropertyBtn);
-  buttonLayout->addWidget(deletePropertyBtn);
   buttonLayout->addWidget(refreshPropertyBtn);
   buttonLayout->addStretch();
 
@@ -1141,10 +1207,6 @@ void MainWindow::setupPropertiesTab() {
 
   connect(addPropertyBtn, &QPushButton::clicked, this,
           &MainWindow::addProperty);
-  connect(editPropertyBtn, &QPushButton::clicked, this,
-          &MainWindow::editProperty);
-  connect(deletePropertyBtn, &QPushButton::clicked, this,
-          &MainWindow::deleteProperty);
   connect(refreshPropertyBtn, &QPushButton::clicked, this,
           &MainWindow::refreshProperties);
   connect(searchPropertyBtn, &QPushButton::clicked, this,
@@ -1159,13 +1221,9 @@ void MainWindow::setupClientsTab() {
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   addClientBtn = new QPushButton("Добавить");
-  editClientBtn = new QPushButton("Редактировать");
-  deleteClientBtn = new QPushButton("Удалить");
   refreshClientBtn = new QPushButton("Обновить");
 
   buttonLayout->addWidget(addClientBtn);
-  buttonLayout->addWidget(editClientBtn);
-  buttonLayout->addWidget(deleteClientBtn);
   buttonLayout->addWidget(refreshClientBtn);
   buttonLayout->addStretch();
 
@@ -1203,9 +1261,6 @@ void MainWindow::setupClientsTab() {
   // tabWidget больше не используется в новом интерфейсе
 
   connect(addClientBtn, &QPushButton::clicked, this, &MainWindow::addClient);
-  connect(editClientBtn, &QPushButton::clicked, this, &MainWindow::editClient);
-  connect(deleteClientBtn, &QPushButton::clicked, this,
-          &MainWindow::deleteClient);
   connect(refreshClientBtn, &QPushButton::clicked, this,
           &MainWindow::refreshClients);
   connect(searchClientBtn, &QPushButton::clicked, this,
@@ -1229,13 +1284,9 @@ void MainWindow::setupTransactionsTab() {
 
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   addTransactionBtn = new QPushButton("Добавить");
-  editTransactionBtn = new QPushButton("Редактировать");
-  deleteTransactionBtn = new QPushButton("Удалить");
   refreshTransactionBtn = new QPushButton("Обновить");
 
   buttonLayout->addWidget(addTransactionBtn);
-  buttonLayout->addWidget(editTransactionBtn);
-  buttonLayout->addWidget(deleteTransactionBtn);
   buttonLayout->addWidget(refreshTransactionBtn);
   buttonLayout->addStretch();
 
@@ -1275,10 +1326,6 @@ void MainWindow::setupTransactionsTab() {
 
   connect(addTransactionBtn, &QPushButton::clicked, this,
           &MainWindow::addTransaction);
-  connect(editTransactionBtn, &QPushButton::clicked, this,
-          &MainWindow::editTransaction);
-  connect(deleteTransactionBtn, &QPushButton::clicked, this,
-          &MainWindow::deleteTransaction);
   connect(refreshTransactionBtn, &QPushButton::clicked, this,
           &MainWindow::refreshTransactions);
   connect(searchTransactionBtn, &QPushButton::clicked, this,
@@ -1326,6 +1373,12 @@ void MainWindow::updatePropertiesTable() {
         row, 4, new QTableWidgetItem(Utils::formatNumber(prop->getArea())));
     propertiesTable->setItem(
         row, 5, new QTableWidgetItem(prop->getIsAvailable() ? "Да" : "Нет"));
+
+    QString propId = Utils::toQString(prop->getId());
+    QWidget *actionsWidget = createActionButtons(
+        propertiesTable, propId, [this]() { editProperty(); },
+        [this]() { deleteProperty(); });
+    propertiesTable->setCellWidget(row, 6, actionsWidget);
   }
 }
 
@@ -1355,6 +1408,12 @@ void MainWindow::updateClientsTable() {
     clientsTable->setItem(
         row, 4,
         new QTableWidgetItem(Utils::toQString(client->getRegistrationDate())));
+
+    QString clientId = Utils::toQString(client->getId());
+    QWidget *actionsWidget = createActionButtons(
+        clientsTable, clientId, [this]() { editClient(); },
+        [this]() { deleteClient(); });
+    clientsTable->setCellWidget(row, 5, actionsWidget);
   }
 }
 
@@ -1397,6 +1456,12 @@ void MainWindow::updateTransactionsTable() {
         row, 5,
         new QTableWidgetItem(
             TableHelper::getTransactionStatusText(trans->getStatus())));
+
+    QString transId = Utils::toQString(trans->getId());
+    QWidget *actionsWidget = createActionButtons(
+        transactionsTable, transId, [this]() { editTransaction(); },
+        [this]() { deleteTransaction(); });
+    transactionsTable->setCellWidget(row, 6, actionsWidget);
   }
 }
 
@@ -1586,6 +1651,12 @@ void MainWindow::searchProperties() {
         row, 4, new QTableWidgetItem(QString::number(prop->getArea(), 'f', 2)));
     propertiesTable->setItem(
         row, 5, new QTableWidgetItem(prop->getIsAvailable() ? "Да" : "Нет"));
+
+    QString propId = QString::fromStdString(prop->getId());
+    QWidget *actionsWidget = createActionButtons(
+        propertiesTable, propId, [this]() { editProperty(); },
+        [this]() { deleteProperty(); });
+    propertiesTable->setCellWidget(row, 6, actionsWidget);
   }
 
   if (properties.empty()) {
@@ -1820,6 +1891,12 @@ void MainWindow::searchClients() {
     clientsTable->setItem(row, 4,
                           new QTableWidgetItem(QString::fromStdString(
                               client->getRegistrationDate())));
+
+    QString clientId = QString::fromStdString(client->getId());
+    QWidget *actionsWidget = createActionButtons(
+        clientsTable, clientId, [this]() { editClient(); },
+        [this]() { deleteClient(); });
+    clientsTable->setCellWidget(row, 5, actionsWidget);
   }
 
   if (clients.empty()) {
@@ -2136,6 +2213,12 @@ void MainWindow::searchTransactions() {
       else
         statusText = "Отменена";
       transactionsTable->setItem(row, 5, new QTableWidgetItem(statusText));
+
+      QString transId = QString::fromStdString(trans->getId());
+      QWidget *actionsWidget = createActionButtons(
+          transactionsTable, transId, [this]() { editTransaction(); },
+          [this]() { deleteTransaction(); });
+      transactionsTable->setCellWidget(row, 6, actionsWidget);
 
       if (statusBar()) {
         statusBar()->showMessage("Сделка найдена", 2000);
@@ -2468,14 +2551,9 @@ void MainWindow::setupAuctionsPage() {
   headerLayout->addWidget(searchAuctionEdit);
   headerLayout->addWidget(searchAuctionBtn);
 
-  // Кнопки
   addAuctionBtn = new QPushButton("➕ Создать");
-  viewAuctionBtn = new QPushButton("👁️ Просмотр");
-  deleteAuctionBtn = new QPushButton("🗑️ Удалить");
   refreshAuctionBtn = new QPushButton("🔄 Обновить");
   headerLayout->addWidget(addAuctionBtn);
-  headerLayout->addWidget(viewAuctionBtn);
-  headerLayout->addWidget(deleteAuctionBtn);
   headerLayout->addWidget(refreshAuctionBtn);
   layout->addLayout(headerLayout);
 
@@ -2483,15 +2561,23 @@ void MainWindow::setupAuctionsPage() {
   QSplitter *splitter = new QSplitter(Qt::Horizontal);
 
   auctionsTable = new QTableWidget;
-  auctionsTable->setColumnCount(6);
+  auctionsTable->setColumnCount(7);
   auctionsTable->setHorizontalHeaderLabels({"ID", "Недвижимость",
                                             "Начальная цена", "Текущая ставка",
-                                            "Статус", "Ставок"});
+                                            "Статус", "Ставок", "Действия"});
   auctionsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   auctionsTable->setSelectionMode(QAbstractItemView::SingleSelection);
-  auctionsTable->horizontalHeader()->setStretchLastSection(true);
   auctionsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
   auctionsTable->setAlternatingRowColors(true);
+  auctionsTable->verticalHeader()->setDefaultSectionSize(60);
+  auctionsTable->setColumnWidth(0, 100);
+  auctionsTable->setColumnWidth(1, 250);
+  auctionsTable->setColumnWidth(2, 150);
+  auctionsTable->setColumnWidth(3, 150);
+  auctionsTable->setColumnWidth(4, 120);
+  auctionsTable->setColumnWidth(5, 80);
+  auctionsTable->setColumnWidth(6, 300);
+  auctionsTable->horizontalHeader()->setStretchLastSection(false);
 
   QFrame *detailsFrame = new QFrame;
   detailsFrame->setFixedWidth(400);
@@ -2517,10 +2603,6 @@ void MainWindow::setupAuctionsPage() {
 
   // Подключения
   connect(addAuctionBtn, &QPushButton::clicked, this, &MainWindow::addAuction);
-  connect(viewAuctionBtn, &QPushButton::clicked, this,
-          &MainWindow::viewAuction);
-  connect(deleteAuctionBtn, &QPushButton::clicked, this,
-          &MainWindow::deleteAuction);
   connect(refreshAuctionBtn, &QPushButton::clicked, this,
           &MainWindow::refreshAuctions);
   connect(searchAuctionBtn, &QPushButton::clicked, this,
@@ -2588,6 +2670,12 @@ void MainWindow::updateAuctionsTable() {
     auctionsTable->setItem(
         row, 5,
         new QTableWidgetItem(QString::number(auction->getBids().size())));
+
+    QString auctionId = QString::fromStdString(auction->getId());
+    QWidget *actionsWidget = createActionButtons(
+        auctionsTable, auctionId, [this]() { viewAuction(); },
+        [this]() { deleteAuction(); }, true);
+    auctionsTable->setCellWidget(row, 6, actionsWidget);
   }
 }
 
@@ -2811,6 +2899,12 @@ void MainWindow::searchAuctions() {
       auctionsTable->setItem(
           row, 5,
           new QTableWidgetItem(QString::number(auction->getBids().size())));
+
+      QString auctionId = QString::fromStdString(auction->getId());
+      QWidget *actionsWidget = createActionButtons(
+          auctionsTable, auctionId, [this]() { viewAuction(); },
+          [this]() { deleteAuction(); }, true);
+      auctionsTable->setCellWidget(row, 6, actionsWidget);
     }
   }
 

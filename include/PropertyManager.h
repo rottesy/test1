@@ -1,13 +1,10 @@
 #ifndef PROPERTY_MANAGER_H
 #define PROPERTY_MANAGER_H
 
-#include "Apartment.h"
-#include "CommercialProperty.h"
-#include "House.h"
 #include "Property.h"
 #include <algorithm>
-#include <fstream>
 #include <memory>
+#include <string>
 #include <vector>
 
 class PropertyManagerException : public std::exception {
@@ -15,7 +12,7 @@ private:
   std::string message;
 
 public:
-  PropertyManagerException(const std::string &msg) : message(msg) {}
+  explicit PropertyManagerException(const std::string &msg) : message(msg) {}
   const char *what() const noexcept override { return message.c_str(); }
 };
 
@@ -61,6 +58,7 @@ private:
 public:
   PropertyManager();
 
+  // Property addition methods
   void addProperty(std::unique_ptr<Property> property);
   void addApartment(const std::string &id, const std::string &city,
                     const std::string &street, const std::string &house,
@@ -78,9 +76,11 @@ public:
                              const std::string &businessType, bool hasParking,
                              int parkingSpaces, bool isVisibleFromStreet);
 
+  // Property management methods
   bool removeProperty(const std::string &id);
   Property *findProperty(const std::string &id) const;
 
+  // Query methods
   std::vector<Property *> getAllProperties() const;
   std::vector<Property *> getAvailableProperties() const;
   std::vector<Property *> searchByPriceRange(double minPrice,
@@ -89,9 +89,11 @@ public:
                                           const std::string &street = "",
                                           const std::string &house = "") const;
 
+  // File operations
   void saveToFile(const std::string &filename) const;
   void loadFromFile(const std::string &filename);
 
+  // Utility methods
   size_t getCount() const { return properties.size(); }
 };
 

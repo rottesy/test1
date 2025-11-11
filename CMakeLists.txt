@@ -35,6 +35,7 @@ set(SOURCES
     src/ClientDialog.cpp
     src/TransactionDialog.cpp
     src/AuctionDialog.cpp
+    src/HtmlFormatter.cpp
 )
 
 # Заголовочные файлы для MOC

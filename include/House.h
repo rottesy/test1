@@ -5,33 +5,35 @@
 
 class House : public Property {
 private:
-    int floors;
-    int rooms;
-    double landArea;
-    bool hasGarage;
-    bool hasGarden;
+  int floors;
+  int rooms;
+  double landArea;
+  bool hasGarage;
+  bool hasGarden;
 
 public:
-    House(const std::string& id, const std::string& city, 
-          const std::string& street, const std::string& house,
-          double price, double area, const std::string& description,
-          int floors, int rooms, double landArea, bool hasGarage, bool hasGarden);
-    
-    std::string getType() const override;
-    void displayInfo() const override;
-    std::string toFileString() const override;
-    Property* clone() const override;
+  House(const std::string &id, const std::string &city,
+        const std::string &street, const std::string &house, double price,
+        double area, const std::string &description, int floors, int rooms,
+        double landArea, bool hasGarage, bool hasGarden);
 
-    int getFloors() const { return floors; }
-    int getRooms() const { return rooms; }
-    double getLandArea() const { return landArea; }
-    bool getHasGarage() const { return hasGarage; }
-    bool getHasGarden() const { return hasGarden; }
+  // Overridden methods
+  std::string getType() const override;
+  void displayInfo() const override;
+  std::string toFileString() const override;
+  Property *clone() const override;
 
-    void setFloors(int floors);
-    void setRooms(int rooms);
-    void setLandArea(double landArea);
+  // Getters
+  int getFloors() const { return floors; }
+  int getRooms() const { return rooms; }
+  double getLandArea() const { return landArea; }
+  bool getHasGarage() const { return hasGarage; }
+  bool getHasGarden() const { return hasGarden; }
+
+  // Setters
+  void setFloors(int floors);
+  void setRooms(int rooms);
+  void setLandArea(double landArea);
 };
 
 #endif // HOUSE_H
-

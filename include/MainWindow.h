@@ -3,6 +3,7 @@
 
 #include "../include/Constants.h"
 #include "../include/EstateAgency.h"
+#include "../include/HtmlFormatter.h"
 #include "../include/TableHelper.h"
 #include "../include/Utils.h"
 #include <QCheckBox>
@@ -86,7 +87,7 @@ private:
   void setupAuctionsPage();
   void updateDashboardStats();
   void onNavigationChanged(int index);
-  void applyStyles(); 
+  void applyStyles();
 
   void updatePropertiesTable();
   void updateClientsTable();
@@ -113,12 +114,24 @@ private:
   void refreshAllData();
   bool hasActiveTransactions(const std::string &propertyId);
 
+  // Helper methods for code reduction
+  QWidget *createActionButtons(QTableWidget *table, const QString &id,
+                               std::function<void()> editAction,
+                               std::function<void()> deleteAction);
+  QWidget *createActionButtons(QTableWidget *table, const QString &id,
+                               std::function<void()> viewAction,
+                               std::function<void()> deleteAction, bool isView);
+  void selectRowById(QTableWidget *table, const QString &id);
+  QFrame *createDetailsFrame(const QString &title, QTextEdit *&detailsText);
+  void setupTableCommon(QTableWidget *table, int rowHeight = 50);
+  bool isNumericId(const QString &text);
+  QStringList preparePropertyIdsList();
+  QStringList prepareClientIdsList();
+
   EstateAgency *agency;
 
   QTableWidget *propertiesTable;
   QPushButton *addPropertyBtn;
-  QPushButton *editPropertyBtn;
-  QPushButton *deletePropertyBtn;
   QPushButton *refreshPropertyBtn;
   QPushButton *searchPropertyBtn;
   QLineEdit *searchPropertyEdit;
@@ -126,8 +139,6 @@ private:
 
   QTableWidget *clientsTable;
   QPushButton *addClientBtn;
-  QPushButton *editClientBtn;
-  QPushButton *deleteClientBtn;
   QPushButton *refreshClientBtn;
   QPushButton *searchClientBtn;
   QLineEdit *searchClientEdit;
@@ -135,8 +146,6 @@ private:
 
   QTableWidget *transactionsTable;
   QPushButton *addTransactionBtn;
-  QPushButton *editTransactionBtn;
-  QPushButton *deleteTransactionBtn;
   QPushButton *refreshTransactionBtn;
   QPushButton *searchTransactionBtn;
   QLineEdit *searchTransactionEdit;
@@ -144,8 +153,6 @@ private:
 
   QTableWidget *auctionsTable;
   QPushButton *addAuctionBtn;
-  QPushButton *viewAuctionBtn;
-  QPushButton *deleteAuctionBtn;
   QPushButton *refreshAuctionBtn;
   QPushButton *searchAuctionBtn;
   QLineEdit *searchAuctionEdit;

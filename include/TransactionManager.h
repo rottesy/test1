@@ -2,9 +2,8 @@
 #define TRANSACTION_MANAGER_H
 
 #include "Transaction.h"
-#include <algorithm>
-#include <fstream>
 #include <memory>
+#include <string>
 #include <vector>
 
 class TransactionManagerException : public std::exception {
@@ -12,7 +11,7 @@ private:
   std::string message;
 
 public:
-  TransactionManagerException(const std::string &msg) : message(msg) {}
+  explicit TransactionManagerException(const std::string &msg) : message(msg) {}
   const char *what() const noexcept override { return message.c_str(); }
 };
 
@@ -24,10 +23,12 @@ private:
 public:
   TransactionManager();
 
+  // Transaction management methods
   void addTransaction(std::shared_ptr<Transaction> transaction);
   bool removeTransaction(const std::string &id);
   Transaction *findTransaction(const std::string &id) const;
 
+  // Query methods
   std::vector<Transaction *> getAllTransactions() const;
   std::vector<Transaction *>
   getTransactionsByClient(const std::string &clientId) const;
@@ -36,9 +37,11 @@ public:
   std::vector<Transaction *>
   getTransactionsByStatus(const std::string &status) const;
 
+  // File operations
   void saveToFile(const std::string &filename) const;
   void loadFromFile(const std::string &filename);
 
+  // Utility methods
   size_t getCount() const { return transactions.size(); }
 };
 
