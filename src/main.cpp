@@ -1,17 +1,19 @@
 #include "../include/MainWindow.h"
 #include <QApplication>
 
-namespace {
+namespace
+{
 constexpr const char *APPLICATION_STYLE = "Fusion";
 }
 
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
 
-  app.setStyle(APPLICATION_STYLE);
+    app.setStyle(APPLICATION_STYLE);
 
-  MainWindow window;
-  window.show();
+    MainWindow window;
+    window.show();
 
-  return app.exec();
+    return app.exec();
 }

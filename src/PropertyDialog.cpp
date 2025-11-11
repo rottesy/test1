@@ -1,17 +1,16 @@
-#include "../include/Property.h"
-#include "../include/Apartment.h"
-#include "../include/House.h"
-#include "../include/CommercialProperty.h"
 #include "../include/PropertyDialog.h"
+#include "../include/Apartment.h"
+#include "../include/CommercialProperty.h"
+#include "../include/House.h"
+#include "../include/Property.h"
+#include <QFormLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QMessageBox>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGroupBox>
-#include <QLabel>
-#include <QFormLayout>
 
-PropertyDialog::PropertyDialog(QWidget* parent, Property* editProperty)
-    : QDialog(parent)
+PropertyDialog::PropertyDialog(QWidget *parent, Property *editProperty) : QDialog(parent)
 {
     // Темная тема для диалога
     setStyleSheet(R"(
@@ -60,41 +59,40 @@ PropertyDialog::PropertyDialog(QWidget* parent, Property* editProperty)
             background-color: #505050;
         }
     )");
-    
+
     setupUI();
-    
-    if (editProperty) {
+
+    if (editProperty)
+    {
         loadPropertyData(editProperty);
     }
-    
+
     setWindowTitle(editProperty ? "Редактировать недвижимость" : "Добавить недвижимость");
     setMinimumWidth(500);
 }
 
-PropertyDialog::~PropertyDialog()
-{
-}
+PropertyDialog::~PropertyDialog() {}
 
 void PropertyDialog::setupUI()
 {
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
     // Тип недвижимости
-    QHBoxLayout* typeLayout = new QHBoxLayout;
+    QHBoxLayout *typeLayout = new QHBoxLayout;
     typeLayout->addWidget(new QLabel("Тип:"));
     typeCombo = new QComboBox;
     typeCombo->addItems({"Квартира", "Дом", "Коммерческая"});
     typeLayout->addWidget(typeCombo);
     mainLayout->addLayout(typeLayout);
-    
+
     // Общие поля
-    QFormLayout* commonLayout = new QFormLayout;
+    QFormLayout *commonLayout = new QFormLayout;
     idEdit = new QLineEdit;
     idEdit->setPlaceholderText("123456 (6-8 цифр)");
     idEdit->setMaxLength(8);
     idEdit->setToolTip("ID должен содержать только цифры\nДлина: от 6 до 8 символов");
     cityEdit = new QLineEdit;
-    cityEdit->setPlaceholderText("Минск");
+    cityEdit->setPlaceholderText("г. Минск");
     cityEdit->setToolTip("Название города");
     streetEdit = new QLineEdit;
     streetEdit->setPlaceholderText("ул. Ленина");
@@ -115,7 +113,7 @@ void PropertyDialog::setupUI()
     descriptionEdit->setMaximumHeight(100);
     availableCheck = new QCheckBox("Доступна");
     availableCheck->setChecked(true);
-    
+
     commonLayout->addRow("ID:", idEdit);
     commonLayout->addRow("Город:", cityEdit);
     commonLayout->addRow("Улица:", streetEdit);
@@ -124,31 +122,31 @@ void PropertyDialog::setupUI()
     commonLayout->addRow("Площадь:", areaSpin);
     commonLayout->addRow("Описание:", descriptionEdit);
     commonLayout->addRow(availableCheck);
-    
-    QGroupBox* commonGroup = new QGroupBox("Общая информация");
+
+    QGroupBox *commonGroup = new QGroupBox("Общая информация");
     commonGroup->setLayout(commonLayout);
     mainLayout->addWidget(commonGroup);
-    
+
     // Квартира
     apartmentGroup = new QGroupBox("Параметры квартиры");
-    QFormLayout* aptLayout = new QFormLayout;
+    QFormLayout *aptLayout = new QFormLayout;
     roomsSpin = new QSpinBox;
     roomsSpin->setRange(1, 10);
     floorSpin = new QSpinBox;
     floorSpin->setRange(1, 100);
     balconyCheck = new QCheckBox;
     elevatorCheck = new QCheckBox;
-    
+
     aptLayout->addRow("Комнат:", roomsSpin);
     aptLayout->addRow("Этаж:", floorSpin);
     aptLayout->addRow("Балкон:", balconyCheck);
     aptLayout->addRow("Лифт:", elevatorCheck);
     apartmentGroup->setLayout(aptLayout);
     mainLayout->addWidget(apartmentGroup);
-    
+
     // Дом
     houseGroup = new QGroupBox("Параметры дома");
-    QFormLayout* houseLayout = new QFormLayout;
+    QFormLayout *houseLayout = new QFormLayout;
     floorsSpin = new QSpinBox;
     floorsSpin->setRange(1, 10);
     houseRoomsSpin = new QSpinBox;
@@ -158,7 +156,7 @@ void PropertyDialog::setupUI()
     landAreaSpin->setSuffix(" м²");
     garageCheck = new QCheckBox;
     gardenCheck = new QCheckBox;
-    
+
     houseLayout->addRow("Этажей:", floorsSpin);
     houseLayout->addRow("Комнат:", houseRoomsSpin);
     houseLayout->addRow("Участок:", landAreaSpin);
@@ -167,16 +165,16 @@ void PropertyDialog::setupUI()
     houseGroup->setLayout(houseLayout);
     houseGroup->setVisible(false);
     mainLayout->addWidget(houseGroup);
-    
+
     // Коммерческая
     commercialGroup = new QGroupBox("Параметры коммерческой");
-    QFormLayout* commLayout = new QFormLayout;
+    QFormLayout *commLayout = new QFormLayout;
     businessTypeEdit = new QLineEdit;
     parkingCheck = new QCheckBox;
     parkingSpacesSpin = new QSpinBox;
     parkingSpacesSpin->setRange(0, 1000);
     visibleFromStreetCheck = new QCheckBox;
-    
+
     commLayout->addRow("Тип бизнеса:", businessTypeEdit);
     commLayout->addRow("Парковка:", parkingCheck);
     commLayout->addRow("Мест парковки:", parkingSpacesSpin);
@@ -184,10 +182,10 @@ void PropertyDialog::setupUI()
     commercialGroup->setLayout(commLayout);
     commercialGroup->setVisible(false);
     mainLayout->addWidget(commercialGroup);
-    
+
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     mainLayout->addWidget(buttonBox);
-    
+
     connect(typeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &PropertyDialog::propertyTypeChanged);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &PropertyDialog::validateAndAccept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
@@ -200,7 +198,7 @@ void PropertyDialog::propertyTypeChanged(int index)
     commercialGroup->setVisible(index == 2);
 }
 
-void PropertyDialog::loadPropertyData(Property* prop)
+void PropertyDialog::loadPropertyData(Property *prop)
 {
     idEdit->setText(QString::fromStdString(prop->getId()));
     cityEdit->setText(QString::fromStdString(prop->getCity()));
@@ -210,100 +208,115 @@ void PropertyDialog::loadPropertyData(Property* prop)
     areaSpin->setValue(prop->getArea());
     descriptionEdit->setPlainText(QString::fromStdString(prop->getDescription()));
     availableCheck->setChecked(prop->getIsAvailable());
-    
-    if (Apartment* apt = dynamic_cast<Apartment*>(prop)) {
+
+    if (Apartment *apt = dynamic_cast<Apartment *>(prop))
+    {
         typeCombo->setCurrentIndex(0);
         roomsSpin->setValue(apt->getRooms());
         floorSpin->setValue(apt->getFloor());
         balconyCheck->setChecked(apt->getHasBalcony());
         elevatorCheck->setChecked(apt->getHasElevator());
-    } else if (House* house = dynamic_cast<House*>(prop)) {
+    }
+    else if (House *house = dynamic_cast<House *>(prop))
+    {
         typeCombo->setCurrentIndex(1);
         floorsSpin->setValue(house->getFloors());
         houseRoomsSpin->setValue(house->getRooms());
         landAreaSpin->setValue(house->getLandArea());
         garageCheck->setChecked(house->getHasGarage());
         gardenCheck->setChecked(house->getHasGarden());
-    } else if (CommercialProperty* comm = dynamic_cast<CommercialProperty*>(prop)) {
+    }
+    else if (CommercialProperty *comm = dynamic_cast<CommercialProperty *>(prop))
+    {
         typeCombo->setCurrentIndex(2);
         businessTypeEdit->setText(QString::fromStdString(comm->getBusinessType()));
         parkingCheck->setChecked(comm->getHasParking());
         parkingSpacesSpin->setValue(comm->getParkingSpaces());
         visibleFromStreetCheck->setChecked(comm->getIsVisibleFromStreet());
     }
-    
+
     updateTypeSpecificFields();
 }
 
-void PropertyDialog::updateTypeSpecificFields()
-{
-    propertyTypeChanged(typeCombo->currentIndex());
-}
+void PropertyDialog::updateTypeSpecificFields() { propertyTypeChanged(typeCombo->currentIndex()); }
 
 void PropertyDialog::validateAndAccept()
 {
     QString idText = idEdit->text();
-    if (idText.isEmpty()) {
+    if (idText.isEmpty())
+    {
         QMessageBox::warning(this, "Ошибка", "ID не может быть пустым");
         return;
     }
-    if (!Property::validateId(idText.toStdString())) {
-        QMessageBox::warning(this, "Ошибка валидации", 
-                            "ID должен содержать только цифры и быть длиной от 6 до 8 символов");
+    if (!Property::validateId(idText.toStdString()))
+    {
+        QMessageBox::warning(this, "Ошибка валидации",
+                             "ID должен содержать только цифры и быть длиной от 6 до 8 символов");
         return;
     }
-    
+
     QString cityText = cityEdit->text();
     QString streetText = streetEdit->text();
     QString houseText = houseEdit->text();
-    if (cityText.isEmpty()) {
+    if (cityText.isEmpty())
+    {
         QMessageBox::warning(this, "Ошибка", "Город не может быть пустым");
         return;
     }
-    if (streetText.isEmpty()) {
+    if (streetText.isEmpty())
+    {
         QMessageBox::warning(this, "Ошибка", "Улица не может быть пустой");
         return;
     }
-    if (houseText.isEmpty()) {
+    if (houseText.isEmpty())
+    {
         QMessageBox::warning(this, "Ошибка", "Дом не может быть пустым");
         return;
     }
-    if (!Property::validateAddressPart(cityText.toStdString())) {
+    if (!Property::validateAddressPart(cityText.toStdString()))
+    {
         QMessageBox::warning(this, "Ошибка валидации", "Неверный формат города");
         return;
     }
-    if (!Property::validateAddressPart(streetText.toStdString())) {
+    if (!Property::validateAddressPart(streetText.toStdString()))
+    {
         QMessageBox::warning(this, "Ошибка валидации", "Неверный формат улицы");
         return;
     }
-    if (!Property::validateAddressPart(houseText.toStdString())) {
+    if (!Property::validateAddressPart(houseText.toStdString()))
+    {
         QMessageBox::warning(this, "Ошибка валидации", "Неверный формат номера дома");
         return;
     }
     double price = priceSpin->value();
-    if (price <= 0) {
+    if (price <= 0)
+    {
         QMessageBox::warning(this, "Ошибка", "Цена должна быть положительной");
         return;
     }
-    if (price < 10000) {
+    if (price < 10000)
+    {
         QMessageBox::warning(this, "Ошибка", "Цена недвижимости не может быть меньше 10 000 рублей");
         return;
     }
-    if (price > 1000000000) {
+    if (price > 1000000000)
+    {
         QMessageBox::warning(this, "Ошибка", "Цена недвижимости не может превышать 1 000 000 000 рублей");
         return;
     }
-    if (areaSpin->value() <= 0) {
+    if (areaSpin->value() <= 0)
+    {
         QMessageBox::warning(this, "Ошибка", "Площадь должна быть положительной");
         return;
     }
-    
+
     int type = typeCombo->currentIndex();
-    if (type == 2 && businessTypeEdit->text().isEmpty()) {
+    if (type == 2 && businessTypeEdit->text().isEmpty())
+    {
         QMessageBox::warning(this, "Ошибка", "Тип бизнеса не может быть пустым");
         return;
     }
-    
+
     accept();
 }
 
@@ -335,4 +348,3 @@ QString PropertyDialog::getBusinessType() const { return businessTypeEdit->text(
 int PropertyDialog::getParkingSpaces() const { return parkingSpacesSpin->value(); }
 bool PropertyDialog::getIsVisibleFromStreet() const { return visibleFromStreetCheck->isChecked(); }
 bool PropertyDialog::getHasParking() const { return parkingCheck->isChecked(); }
-

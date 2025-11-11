@@ -15,54 +15,55 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 
-class AuctionDialog : public QDialog {
-  Q_OBJECT
+class AuctionDialog : public QDialog
+{
+    Q_OBJECT
 
-public:
-  AuctionDialog(QWidget *parent = nullptr, Auction *editAuction = nullptr,
-                const QStringList &propertyIds = QStringList());
-  ~AuctionDialog();
+  public:
+    AuctionDialog(QWidget *parent = nullptr, Auction *editAuction = nullptr,
+                  const QStringList &propertyIds = QStringList());
+    ~AuctionDialog();
 
-  QString getId() const;
-  QString getPropertyId() const;
-  double getStartingPrice() const;
+    QString getId() const;
+    QString getPropertyId() const;
+    double getStartingPrice() const;
 
-  void refreshBids();
-  void updateAuctionInfo();
+    void refreshBids();
+    void updateAuctionInfo();
 
-private slots:
-  void validateAndAccept();
-  void onPropertyChanged(int index);
-  void addBid();
-  void completeAuction();
-  void refreshAuctionInfo();
+  private slots:
+    void validateAndAccept();
+    void onPropertyChanged(int index);
+    void addBid();
+    void completeAuction();
+    void refreshAuctionInfo();
 
-private:
-  void setupUI();
-  void loadAuctionData(Auction *auction);
-  void updatePropertyInfo();
-  void createTransactionFromAuction();
+  private:
+    void setupUI();
+    void loadAuctionData(Auction *auction);
+    void updatePropertyInfo();
+    void createTransactionFromAuction();
 
-  bool isViewMode;
-  Auction *currentAuction;
-  EstateAgency *agency;
+    bool isViewMode;
+    Auction *currentAuction;
+    EstateAgency *agency;
 
-  QLineEdit *idEdit;
-  QComboBox *propertyCombo;
-  QDoubleSpinBox *priceSpin;
-  QLabel *propertyPriceLabel;
-  QLabel *buyoutPriceLabel;
-  QLabel *currentHighestBidLabel;
-  QLabel *statusLabel;
+    QLineEdit *idEdit;
+    QComboBox *propertyCombo;
+    QDoubleSpinBox *priceSpin;
+    QLabel *propertyPriceLabel;
+    QLabel *buyoutPriceLabel;
+    QLabel *currentHighestBidLabel;
+    QLabel *statusLabel;
 
-  QTableWidget *bidsTable;
-  QPushButton *addBidBtn;
-  QPushButton *completeAuctionBtn;
-  QComboBox *clientCombo;
-  QDoubleSpinBox *bidAmountSpin;
+    QTableWidget *bidsTable;
+    QPushButton *addBidBtn;
+    QPushButton *completeAuctionBtn;
+    QComboBox *clientCombo;
+    QDoubleSpinBox *bidAmountSpin;
 
-  QDialogButtonBox *buttonBox;
-  QStringList propertyIds;
+    QDialogButtonBox *buttonBox;
+    QStringList propertyIds;
 };
 
 #endif // AUCTION_DIALOG_H

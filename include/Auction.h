@@ -8,58 +8,59 @@
 #include <string>
 #include <vector>
 
-class Auction {
-private:
-  std::string id;
-  std::string propertyId;
-  std::string propertyAddress;
-  double startingPrice;
-  double buyoutPrice;
-  std::vector<std::shared_ptr<Bid>> bids;
-  std::string status;
-  std::string createdAt;
-  std::string completedAt;
+class Auction
+{
+  private:
+    std::string id;
+    std::string propertyId;
+    std::string propertyAddress;
+    double startingPrice;
+    double buyoutPrice;
+    std::vector<std::shared_ptr<Bid>> bids;
+    std::string status;
+    std::string createdAt;
+    std::string completedAt;
 
-public:
-  Auction(const std::string &id, const std::string &propertyId,
-          const std::string &propertyAddress, double startingPrice);
+  public:
+    Auction(const std::string &id, const std::string &propertyId, const std::string &propertyAddress,
+            double startingPrice);
 
-  // Friend operators
-  friend std::ostream &operator<<(std::ostream &os, const Auction &auction);
+    // Friend operators
+    friend std::ostream &operator<<(std::ostream &os, const Auction &auction);
 
-  // Comparison operators
-  bool operator==(const Auction &other) const;
-  bool operator<(const Auction &other) const;
+    // Comparison operators
+    bool operator==(const Auction &other) const;
+    bool operator<(const Auction &other) const;
 
-  // Bid management
-  bool addBid(std::shared_ptr<Bid> bid);
-  void addBidDirect(std::shared_ptr<Bid> bid);
+    // Bid management
+    bool addBid(std::shared_ptr<Bid> bid);
+    void addBidDirect(std::shared_ptr<Bid> bid);
 
-  // Bid queries
-  double getCurrentHighestBid() const;
-  Bid *getHighestBid() const;
+    // Bid queries
+    double getCurrentHighestBid() const;
+    Bid *getHighestBid() const;
 
-  // Status management
-  void complete();
-  void cancel();
+    // Status management
+    void complete();
+    void cancel();
 
-  // Getters
-  std::string getId() const { return id; }
-  std::string getPropertyId() const { return propertyId; }
-  std::string getPropertyAddress() const { return propertyAddress; }
-  double getStartingPrice() const { return startingPrice; }
-  double getBuyoutPrice() const { return buyoutPrice; }
-  std::vector<std::shared_ptr<Bid>> getBids() const { return bids; }
-  std::string getStatus() const { return status; }
-  std::string getCreatedAt() const { return createdAt; }
-  std::string getCompletedAt() const { return completedAt; }
-  bool isActive() const { return status == "active"; }
-  bool isCompleted() const { return status == "completed"; }
+    // Getters
+    std::string getId() const { return id; }
+    std::string getPropertyId() const { return propertyId; }
+    std::string getPropertyAddress() const { return propertyAddress; }
+    double getStartingPrice() const { return startingPrice; }
+    double getBuyoutPrice() const { return buyoutPrice; }
+    std::vector<std::shared_ptr<Bid>> getBids() const { return bids; }
+    std::string getStatus() const { return status; }
+    std::string getCreatedAt() const { return createdAt; }
+    std::string getCompletedAt() const { return completedAt; }
+    bool isActive() const { return status == "active"; }
+    bool isCompleted() const { return status == "completed"; }
 
-  // Utility methods
-  bool wasBuyout() const;
-  std::string toString() const;
-  std::string toFileString() const;
+    // Utility methods
+    bool wasBuyout() const;
+    std::string toString() const;
+    std::string toFileString() const;
 };
 
 std::ostream &operator<<(std::ostream &os, const Auction &auction);

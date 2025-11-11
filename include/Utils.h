@@ -4,43 +4,42 @@
 #include <QString>
 #include <string>
 
-namespace Utils {
+namespace Utils
+{
 inline std::string toString(const QString &qstr) { return qstr.toStdString(); }
 
-inline QString toQString(const std::string &str) {
-  return QString::fromStdString(str);
-}
+inline QString toQString(const std::string &str) { return QString::fromStdString(str); }
 
-inline std::string safeToString(const QString &qstr) {
-  return qstr.isEmpty() ? std::string() : qstr.toStdString();
-}
+inline std::string safeToString(const QString &qstr) { return qstr.isEmpty() ? std::string() : qstr.toStdString(); }
 
-inline QString formatPrice(double price) {
-  return QString::number(price, 'f', 2) + " руб.";
-}
+inline QString formatPrice(double price) { return QString::number(price, 'f', 2) + " руб."; }
 
-inline QString formatNumber(double number, int decimals = 2) {
-  return QString::number(number, 'f', decimals);
-}
+inline QString formatNumber(double number, int decimals = 2) { return QString::number(number, 'f', decimals); }
 
-inline bool isNumericId(const QString &str) {
-  if (str.length() < 6 || str.length() > 8) {
-    return false;
-  }
-  for (const QChar &ch : str) {
-    if (!ch.isDigit()) {
-      return false;
+inline bool isNumericId(const QString &str)
+{
+    if (str.length() < 6 || str.length() > 8)
+    {
+        return false;
     }
-  }
-  return true;
+    for (const QChar &ch : str)
+    {
+        if (!ch.isDigit())
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
-inline QString extractIdFromDisplayString(const QString &displayString) {
-  int separatorIndex = displayString.indexOf(" - ");
-  if (separatorIndex > 0) {
-    return displayString.left(separatorIndex);
-  }
-  return displayString;
+inline QString extractIdFromDisplayString(const QString &displayString)
+{
+    int separatorIndex = displayString.indexOf(" - ");
+    if (separatorIndex > 0)
+    {
+        return displayString.left(separatorIndex);
+    }
+    return displayString;
 }
 } // namespace Utils
 
